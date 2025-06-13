@@ -37,18 +37,9 @@ jobs:
 
       - name: Download and Install CortexCLI 
         run: |
-          echo "📥 Getting CortexCLI from signed URL..."
-          SIGNED_URL=$(curl -s "${CORTEX_API_URL}/public_api/v1/unified-cli/releases/download-link?os=linux&architecture=amd64" \
-            -H "x-xdr-auth-id: ${CORTEX_API_KEY_ID}" \
-            -H "Authorization: ${CORTEX_API_KEY}" \
-            | jq -r '.signed_url')
-
-          echo "📦 Downloading CortexCLI..."
-          curl -s -o cortexcli.tar.xz "$SIGNED_URL"
-
-          echo "📦 Extracting CortexCLI..."
+          echo "Downloading CortexCLI..."
           mkdir -p cortexcli
-          tar -xf cortexcli.tar.xz -C cortexcli
+          curl -s -o cortexcli $(curl -s "${CORTEX_API_URL}/public_api/v1/unified-cli/releases/download-link?os=linux&architecture=amd64" -H "x-xdr-auth-id: ${CORTEX_API_KEY_ID}" -H "Authorization: ${CORTEX_API_KEY}" | jq -r ".signed_url")
           chmod +x cortexcli/cortexcli
           sudo mv cortexcli/cortexcli /usr/local/bin/
           cortexcli --version
