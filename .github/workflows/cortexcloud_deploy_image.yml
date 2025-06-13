@@ -39,7 +39,7 @@ jobs:
         run: |
           echo "Downloading CortexCLI..."
           mkdir -p cortexcli
-          curl -s -o cortexcli $(curl -s "${CORTEX_API_URL}/public_api/v1/unified-cli/releases/download-link?os=linux&architecture=amd64" -H "x-xdr-auth-id: ${CORTEX_API_KEY_ID}" -H "Authorization: ${CORTEX_API_KEY}" | jq -r ".signed_url")
+          curl -s -o cortexcli/cortexcli $(curl -s "${CORTEX_API_URL}/public_api/v1/unified-cli/releases/download-link?os=linux&architecture=amd64" -H "x-xdr-auth-id: ${CORTEX_API_KEY_ID}" -H "Authorization: ${CORTEX_API_KEY}" | jq -r ".signed_url")
           chmod +x cortexcli/cortexcli
           sudo mv cortexcli/cortexcli /usr/local/bin/
           cortexcli --version
