@@ -9,9 +9,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      CORTEX_API_URL_CCR: ${{ secrets.CORTEX_API_URL_CCR }}
-      CORTEX_API_KEY_CCR: ${{ secrets.CORTEX_API_KEY_CCR }}
-      CORTEX_API_KEY_ID_CCR: ${{ secrets.CORTEX_API_KEY_ID_CCR }}
+      CORTEX_API_URL: ${{ secrets.CORTEX_API_URL }}
+      CORTEX_API_KEY: ${{ secrets.CORTEX_API_KEY }}
+      CORTEX_API_KEY_ID: ${{ secrets.CORTEX_API_KEY_ID }}
       IMAGE_NAME: vulappcrtx
       IMAGE_TAG: 0.0.1
       IMAGE_TAR: vulappcrtx.tar
@@ -38,9 +38,9 @@ jobs:
       - name: Download and Install CortexCLI 
         run: |
           echo "📥 Getting CortexCLI from signed URL..."
-          SIGNED_URL=$(curl -s "${CORTEX_API_URL_CCR}/public_api/v1/unified-cli/releases/download-link?os=linux&architecture=amd64" \
-            -H "x-xdr-auth-id: ${CORTEX_API_KEY_ID_CCR}" \
-            -H "Authorization: ${CORTEX_API_KEY_CCR}" \
+          SIGNED_URL=$(curl -s "${CORTEX_API_URL}/public_api/v1/unified-cli/releases/download-link?os=linux&architecture=amd64" \
+            -H "x-xdr-auth-id: ${CORTEX_API_KEY_ID}" \
+            -H "Authorization: ${CORTEX_API_KEY}" \
             | jq -r '.signed_url')
 
           echo "📦 Downloading CortexCLI..."
@@ -56,9 +56,9 @@ jobs:
       - name: Scan image archive with CortexCLI
         run: |
           cortexcli \
-            --api-base-url "$CORTEX_API_URL_CCR" \
-            --api-key "$CORTEX_API_KEY_CCR" \
-            --api-key-id "$CORTEX_API_KEY_ID_CCR" \
+            --api-base-url "$CORTEX_API_URL" \
+            --api-key "$CORTEX_API_KEY" \
+            --api-key-id "$CORTEX_API_KEY_ID" \
             image scan "$IMAGE_TAR"
 
       - name: Upload Docker archive
