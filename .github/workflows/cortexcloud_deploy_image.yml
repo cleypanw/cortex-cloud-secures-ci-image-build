@@ -1,0 +1,68 @@
+name: Build and Scan with CortexCLI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-scan:
+    runs-on: ubuntu-latest
+
+    env:
+      CORTEX_API_URL_CCR: ${{ secrets.CORTEX_API_URL_CCR }}
+      CORTEX_API_KEY_CCR: ${{ secrets.CORTEX_API_KEY_CCR }}
+      CORTEX_API_KEY_ID_CCR: ${{ secrets.CORTEX_API_KEY_ID_CCR }}
+      IMAGE_NAME: vulappcrtx
+      IMAGE_TAG: 0.0.1
+      IMAGE_TAR: vulappcrtx.tar
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image and export as archive
+        run: |
+          docker buildx build \
+            --output type=docker,dest=${{ env.IMAGE_TAR }} \
+            -t $IMAGE_NAME:$IMAGE_TAG \
+            .
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl jq xz-utils
+
+      - name: Download and Install CortexCLI 
+        run: |
+          echo "📥 Getting CortexCLI from signed URL..."
+          SIGNED_URL=$(curl -s "${CORTEX_API_URL_CCR}/public_api/v1/unified-cli/releases/download-link?os=linux&architecture=amd64" \
+            -H "x-xdr-auth-id: ${CORTEX_API_KEY_ID_CCR}" \
+            -H "Authorization: ${CORTEX_API_KEY_CCR}" \
+            | jq -r '.signed_url')
+
+          echo "📦 Downloading CortexCLI..."
+          curl -s -o cortexcli.tar.xz "$SIGNED_URL"
+
+          echo "📦 Extracting CortexCLI..."
+          mkdir -p cortexcli
+          tar -xf cortexcli.tar.xz -C cortexcli
+          chmod +x cortexcli/cortexcli
+          sudo mv cortexcli/cortexcli /usr/local/bin/
+          cortexcli --version
+
+      - name: Scan image archive with CortexCLI
+        run: |
+          cortexcli \
+            --api-base-url "$CORTEX_API_URL_CCR" \
+            --api-key "$CORTEX_API_KEY_CCR" \
+            --api-key-id "$CORTEX_API_KEY_ID_CCR" \
+            image scan "$IMAGE_TAR"
+
+      - name: Upload Docker archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image-tar
+          path: ${{ env.IMAGE_TAR }}
