@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      CORTEX_API_URL: ${{ secrets.CORTEX_API_URL }}
+      CORTEX_API_URL: ${{ vars.CORTEX_API_URL }}
       CORTEX_API_KEY: ${{ secrets.CORTEX_API_KEY }}
       CORTEX_API_KEY_ID: ${{ secrets.CORTEX_API_KEY_ID }}
       IMAGE_NAME: vulappcrtx
