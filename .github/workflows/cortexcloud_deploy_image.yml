@@ -41,7 +41,8 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y curl jq xz-utils
+          sudo apt-get install -y curl jq xz-utils libhyperscan-dev
+          
 
       - name: Download and Install CortexCLI 
         run: |
