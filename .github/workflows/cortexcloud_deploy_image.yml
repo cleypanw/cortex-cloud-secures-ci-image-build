@@ -31,12 +31,12 @@ jobs:
       - name: Verify Node.js Version 
         run: node -v
 
-      - name: Build Docker image and export as archive
-        run: |
-          docker buildx build \
-            --output type=docker,dest=${{ env.IMAGE_TAR }} \
-            -t $IMAGE_NAME:$IMAGE_TAG \
-            .
+#      - name: Build Docker image and export as archive
+#        run: |
+#          docker buildx build \
+#            --output type=docker,dest=${{ env.IMAGE_TAR }} \
+#            -t $IMAGE_NAME:$IMAGE_TAG \
+#            .
 
       - name: Install dependencies
         run: |
@@ -55,7 +55,7 @@ jobs:
 
       - name: Scan image archive with CortexCLI
         run: |
-          cortexcli --api-base-url $CORTEX_API_URL --api-key $CORTEX_API_KEY --api-key-id $CORTEX_API_KEY_ID image scan $IMAGE_TAR
+          sudo cortexcli --api-base-url $CORTEX_API_URL --api-key $CORTEX_API_KEY --api-key-id $CORTEX_API_KEY_ID image scan $IMAGE_NAME:$IMAGE_TAG
 
       - name: Upload Docker archive
         uses: actions/upload-artifact@v4
