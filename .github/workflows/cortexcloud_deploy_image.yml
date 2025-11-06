@@ -31,12 +31,20 @@ jobs:
       - name: Verify Node.js Version 
         run: node -v
 
+#### No need to use docker image archive with cortexcli 0.14
 #      - name: Build Docker image and export as archive
 #        run: |
 #          docker buildx build \
 #            --output type=docker,dest=${{ env.IMAGE_TAR }} \
 #            -t $IMAGE_NAME:$IMAGE_TAG \
 #            .
+
+      - name: Build Docker image and export as archive
+        run: |
+          docker buildx build \
+            --load \
+            -t $IMAGE_NAME:$IMAGE_TAG \
+            .
 
       - name: Install dependencies
         run: |
