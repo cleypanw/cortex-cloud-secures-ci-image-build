@@ -23,7 +23,7 @@ The image is tested and validated by Prisma Cloud, to check for vulnerabilities 
 ##### 1. Create a fork of the repository
 
 - Login with your github account
-- Open https://github.com/cleypanw/prisma-cloud-secures-ci-image-build and click on Fork
+- Open https://github.com/cleypanw/cleypanw/cortex-cloud-secures-ci-image-build/ and click on Fork
 
 
 
@@ -33,17 +33,12 @@ Open **Settings > Security > Secrets and variables > Actions**
 
 - Secrets
 
-  - **AWS_ACCESS_KEY_ID**
+  - **Cortex_API_KEY** 
 
-  - **AWS_SECRET_ACCESS_KEY**
+  - **CORTEX_API_KEY_ID** 
+- Variables
 
-  - **PCC_CONSOLE_URL** (Prisma Cloud Console URL)
-
-  - **PCC_PASS** (Prisma Cloud Access Key)
-
-  - **PCC_USER** (Prisma Cloud Secret Key)
-
-    
+  - **CORTEX_API_URL** (Cortex API URL)
 
 
 
