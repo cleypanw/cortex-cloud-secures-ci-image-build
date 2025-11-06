@@ -55,7 +55,7 @@ jobs:
 
       - name: Scan image archive with CortexCLI
         run: |
-          sudo cortexcli --api-base-url $CORTEX_API_URL --api-key $CORTEX_API_KEY --api-key-id $CORTEX_API_KEY_ID image scan $IMAGE_NAME:$IMAGE_TAG
+          sudo cortexcli --api-base-url $CORTEX_API_URL --api-key $CORTEX_API_KEY --api-key-id $CORTEX_API_KEY_ID image scan --timeout 300 $IMAGE_NAME:$IMAGE_TAG
 
       - name: Upload Docker archive
         uses: actions/upload-artifact@v4
